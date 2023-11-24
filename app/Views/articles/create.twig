@@ -1,0 +1,18 @@
+{% include 'Partials/head.twig' %}
+{% include 'Partials/navbar.twig' %}
+<form method="post" action="/articles">
+    <div>
+        <label for="title">Title: </label>
+        <input id="title" type="text" name="title"/>
+    </div>
+    <div>
+        <label for="description">Description: </label><br>
+        <textarea id="description" name="description" rows="5" cols="15"></textarea>
+    </div>
+    <div>
+        <label for="picture">Picture URL:</label>
+        <input type="text" name="picture" placeholder="Enter picture URL">
+        <br>
+    </div>
+    <button type="submit">Create Article</button>
+</form>
