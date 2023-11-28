@@ -14,6 +14,7 @@ $twig = new Environment($loader);
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', [ArticleController::class, 'index']);
+    $r->addRoute('GET', '/articles', [ArticleController::class, 'index']);
     $r->addRoute('GET', '/articles/create', [ArticleController::class, 'create']);
     $r->addRoute('POST', '/articles', [ArticleController::class, 'store']);
     $r->addRoute('GET', '/articles/{id:\d+}', [ArticleController::class, 'show']);

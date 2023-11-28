@@ -17,7 +17,7 @@ class Article
         string  $title,
         string  $description,
         string  $picture,
-        string $createdAt,
+        ?string $createdAt = null,
         ?int    $id = null,
         ?string $updatedAt = null
     )
@@ -25,7 +25,7 @@ class Article
         $this->title = $title;
         $this->description = $description;
         $this->picture = $picture;
-        $this->createdAt =  new Carbon($createdAt);
+        $this->createdAt = $createdAt == null ? Carbon::now() : new Carbon($createdAt);
         $this->id = $id;
         $this->updatedAt = $updatedAt ? new Carbon($updatedAt) : null;
     }
@@ -51,14 +51,24 @@ class Article
         return $this->createdAt;
     }
 
+    public function getUpdatedAt(): Carbon
+    {
+        return $this->updatedAt;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-
-    public function getUpdatedAt(): Carbon
+    public function update(array $data): void
     {
-        return $this->updatedAt;
+        $this->title = $data['title'] ?? $this->title;
+        $this->description = $data['description'] ?? $this->description;
+        $this->picture = $data['picture'] ?? $this->picture;
+
+        $this->updatedAt = Carbon::now();
     }
+
+
 }
