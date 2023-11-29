@@ -9,6 +9,7 @@ class Article
     private string $title;
     private string $description;
     private string $picture;
+    private ?string $url;
     private Carbon $createdAt;
     private ?int $id;
     private ?Carbon $updatedAt;
@@ -17,6 +18,7 @@ class Article
         string  $title,
         string  $description,
         string  $picture,
+        ?string $url = null,
         ?string $createdAt = null,
         ?int    $id = null,
         ?string $updatedAt = null
@@ -25,6 +27,7 @@ class Article
         $this->title = $title;
         $this->description = $description;
         $this->picture = $picture;
+        $this->url = $url;
         $this->createdAt = $createdAt == null ? Carbon::now() : new Carbon($createdAt);
         $this->id = $id;
         $this->updatedAt = $updatedAt ? new Carbon($updatedAt) : null;
@@ -45,6 +48,10 @@ class Article
         return $this->picture;
     }
 
+    public function getUrl(): string
+    {
+        return $this->url ?? '/articles/' . $this->id;
+    }
 
     public function getCreatedAt(): Carbon
     {

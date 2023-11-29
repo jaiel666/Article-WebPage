@@ -8,7 +8,7 @@ use App\Models\Article;
 
 class ArticleCollection
 {
-    private array $articles;
+    private array $articles = [];
     public function __construct(array $articles = [])
     {
         foreach ($articles as $article)
@@ -29,4 +29,10 @@ class ArticleCollection
     {
         return $this->articles;
     }
+
+    public function merge(ArticleCollection $collection): void
+    {
+        $this->articles = array_merge($this->articles, $collection->getAll());
+    }
+
 }

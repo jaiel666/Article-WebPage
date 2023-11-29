@@ -5,13 +5,14 @@ namespace App\Services\Article;
 use App\Repositories\ArticleRepository;
 
 
+
 class DeleteArticleService
 {
     private ArticleRepository $articleRepository;
 
-    public function __construct()
+    public function __construct(ArticleRepository $articleRepository)
     {
-        $this->articleRepository = new ArticleRepository();
+        $this->articleRepository = $articleRepository;
     }
 
 

@@ -3,15 +3,16 @@
 namespace App\Services\Article;
 
 use App\Repositories\ArticleRepository;
+use App\Repositories\MysqlArticleRepository;
 
 
 class UpdateArticleService
 {
     private ArticleRepository $articleRepository;
 
-    public function __construct()
+    public function __construct(ArticleRepository $articleRepository)
     {
-        $this->articleRepository = new ArticleRepository();
+        $this->articleRepository = $articleRepository;
     }
 
     public function execute(int $id,string $title, string $description, string $picture): void

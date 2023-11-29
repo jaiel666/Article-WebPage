@@ -5,7 +5,7 @@
     {% for article in articles.all %}
         <div class="article-box">
             <h3>
-                <a href="/articles/{{ article.id }}">{{ article.title }}</a>
+                <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
             </h3>
             <img class="index-image" src="{{ article.picture }}" alt="{{ article.title }}">
             <p>

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-
 use App\RedirectResponse;
 use App\Response;
 use App\Services\Article\DeleteArticleService;
@@ -11,15 +10,32 @@ use App\Services\Article\ShowArticleService;
 use App\Services\Article\StoreArticleService;
 use App\Services\Article\UpdateArticleService;
 use App\ViewResponse;
-use Carbon\Carbon;
 
-
-class ArticleController extends BaseController
+class ArticleController
 {
+    private $indexArticleService;
+    private $showArticleService;
+    private $storeArticleService;
+    private $updateArticleService;
+    private $deleteArticleService;
+
+    public function __construct(
+        IndexArticleService $indexArticleService,
+        ShowArticleService $showArticleService,
+        StoreArticleService $storeArticleService,
+        UpdateArticleService $updateArticleService,
+        DeleteArticleService $deleteArticleService
+    ) {
+        $this->indexArticleService = $indexArticleService;
+        $this->showArticleService = $showArticleService;
+        $this->storeArticleService = $storeArticleService;
+        $this->updateArticleService = $updateArticleService;
+        $this->deleteArticleService = $deleteArticleService;
+    }
+
     public function index()
     {
-        $service = new IndexArticleService();
-        $articles = $service->execute();
+        $articles = $this->indexArticleService->execute();
 
         return new ViewResponse('articles/index', [
             'articles' => $articles
@@ -28,8 +44,7 @@ class ArticleController extends BaseController
 
     public function show(int $id): Response
     {
-        $service = new ShowArticleService();
-        $article = $service->execute($id);
+        $article = $this->showArticleService->execute($id);
 
         return new ViewResponse('articles/show', [
             'article' => $article
@@ -43,16 +58,14 @@ class ArticleController extends BaseController
 
     public function store(): Response
     {
-        $service = new StoreArticleService();
-        $service->execute($_POST['title'],$_POST['description'],$_POST['picture']);
+        $this->storeArticleService->execute($_POST['title'], $_POST['description'], $_POST['picture']);
 
         return new RedirectResponse('/articles');
     }
 
     public function edit(int $id): Response
     {
-        $service = new ShowArticleService();
-        $article = $service->execute($id);
+        $article = $this->showArticleService->execute($id);
 
         return new ViewResponse('articles/edit', [
             'article' => $article
@@ -61,17 +74,15 @@ class ArticleController extends BaseController
 
     public function update(int $id)
     {
-        $service = new UpdateArticleService();
-        $service->execute($id,$_POST['title'],$_POST['description'],$_POST['picture']);
+        $this->updateArticleService->execute($id, $_POST['title'], $_POST['description'], $_POST['picture']);
+
         return new RedirectResponse('/articles/' . $id);
     }
 
     public function delete(int $id): Response
     {
-        $service = new DeleteArticleService();
-        $service->execute($id);
+        $this->deleteArticleService->execute($id);
 
         return new RedirectResponse('/articles');
     }
-
 }

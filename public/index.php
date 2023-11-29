@@ -2,6 +2,11 @@
 
 
 use App\Controllers\ArticleController;
+use App\Repositories\ArticleRepository;
+use App\Repositories\CombinedArticleRepository;
+use App\Repositories\MysqlArticleRepository;
+use App\Repositories\NewsApiArticleRepository;
+use GuzzleHttp\Client;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -11,6 +16,18 @@ require '../vendor/autoload.php';
 
 $loader = new FilesystemLoader(__DIR__ . '/../app/Views');
 $twig = new Environment($loader);
+
+$builder = new \DI\ContainerBuilder();
+$container = $builder->build();
+
+$container->set(ArticleRepository::class, function () {
+    return new CombinedArticleRepository(
+        new MysqlArticleRepository(),
+        new NewsApiArticleRepository()
+    );
+});
+
+
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', [ArticleController::class, 'index']);
@@ -48,7 +65,8 @@ switch ($routeInfo[0]) {
 
         [$controller, $method] = $handler;
 
-        $response = (new $controller)->{$method}(...array_values($vars));
+        $controller = $container->get($controller);
+        $response = $controller->{$method}(...array_values($vars));
 
         switch (true)
         {
@@ -56,7 +74,7 @@ switch ($routeInfo[0]) {
                 echo $twig->render($response->getViewName() . '.twig', $response->getData());
                 break;
             case $response instanceof \App\RedirectResponse:
-               header('Location: ' . $response->getLocation());
+                header('Location: ' . $response->getLocation());
                 break;
             default:
                 break;
